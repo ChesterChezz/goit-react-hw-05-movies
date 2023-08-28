@@ -5,7 +5,7 @@ import css from './MovieList.module.css';
 import { useSearchParams } from 'react-router-dom';
 
 const MovieList = ({ location, movieList, paginationPage, totalPages }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
   return (
     <>
       <ul className={css.list}>

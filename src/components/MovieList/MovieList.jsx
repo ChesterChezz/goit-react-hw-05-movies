@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
-import Button from '../Button/Button';
 import PropTypes from 'prop-types';
 import css from './MovieList.module.css';
-import { useSearchParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 const MovieList = ({ movieList }) => {

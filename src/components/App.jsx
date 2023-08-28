@@ -1,16 +1,14 @@
 import { Suspense, lazy } from 'react';
 import { Route, Routes } from 'react-router-dom';
-
-const Layout = lazy(() => import('./Layout/Layout'));
+import Layout from './Layout/Layout';
 const Home = lazy(() => import('../pages/Home'));
 const Movies = lazy(() => import('../pages/Movies'));
-const MovieDetails = lazy(() => import('../pages/MovieDetails'));
+const MovieDetails = lazy(() => import('../pages/MovieDetails/MovieDetails'));
 const Cast = lazy(() => import('./Cast/Cast'));
 const Reviews = lazy(() => import('./Reviews/Reviews'));
 
 const App = () => {
   return (
-    
     <Routes>
       <Route
         path="/"

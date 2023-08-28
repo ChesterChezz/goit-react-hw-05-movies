@@ -3,10 +3,10 @@ import { useParams, useLocation, Link, Outlet } from 'react-router-dom';
 import { getDataByAxios } from 'sevices/library';
 import css from './MovieDetails.module.css';
 import Loader from 'components/Loader/Loader';
-import defaultImg from '../images/image.webp';
+import defaultImg from '../../images/image.webp';
 
 const MovieDetails = () => {
-  const [movieData, setMovieData] = useState({});
+  const [movieData, setMovieData] = useState(null);
   const { movieId } = useParams();
   const BASE_IMAGE_ENDPOINT = 'https://image.tmdb.org/t/p/w500';
   const [isLoading, setIsLoading] = useState(false);
@@ -15,17 +15,20 @@ const MovieDetails = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getDataByAxios(`/movie/${movieId}`, 0, '').then(resp => {
-      setIsLoading(false);
-      if (resp.status !== 200) {
-        throw new Error(resp.statusText);
-      } else {
-        setMovieData(resp.data);
+    getDataByAxios(`/movie/${movieId}`, 0, '')
+      .then(resp => {
         setIsLoading(false);
-      }
-    });
+        if (resp.status !== 200) {
+          throw new Error(resp.statusText);
+        } else {
+          setMovieData(resp.data);
+        }
+      })
+      .finally(setIsLoading(false));
   }, [movieId]);
-
+  if (!movieData) {
+    return;
+  }
   const {
     genres,
     original_title,

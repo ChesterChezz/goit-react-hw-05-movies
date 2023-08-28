@@ -6,7 +6,7 @@ import Loader from 'components/Loader/Loader';
 
 const Home = () => {
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [movieList, setMovieList] = useState([]);
   const totalPages = useRef(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,31 +18,17 @@ const Home = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getDataByAxios(`/trending/movie/week`, paginationPage).then(resp => {
-      if (resp.status !== 200) {
-        throw new Error(resp.statusText);
-      } else {
-        totalPages.current = resp.data.total_pages;
-        setMovieList(resp.data.results);
-        setIsLoading(false);
-      }
-    });
+    getDataByAxios(`/trending/movie/week`, paginationPage)
+      .then(resp => {
+        if (resp.status !== 200) {
+          throw new Error(resp.statusText);
+        } else {
+          totalPages.current = resp.data.total_pages;
+          setMovieList(resp.data.results);
+        }
+      })
+      .finally(setIsLoading(false));
   }, [paginationPage]);
-
-  const onLoadNextPage = () => {
-    paginationPage = paginationPage + 1;
-    setSearchParams({ page: paginationPage });
-  };
-
-  const onLoadPreviousPage = () => {
-    paginationPage = paginationPage - 1;
-    setSearchParams({ page: paginationPage });
-  };
-
-  const onToStartPage = () => {
-    paginationPage = 1;
-    setSearchParams({ page: paginationPage });
-  };
 
   const title = `Trending today (Page ${paginationPage} of ${totalPages.current})`;
 
@@ -56,9 +42,6 @@ const Home = () => {
           movieList={movieList}
           paginationPage={paginationPage}
           totalPages={totalPages.current}
-          onLoadNextPage={onLoadNextPage}
-          onLoadPreviousPage={onLoadPreviousPage}
-          onToStartPage={onToStartPage}
         />
       )}
     </div>

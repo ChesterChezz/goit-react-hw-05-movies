@@ -51,21 +51,6 @@ const Movies = () => {
     setSearchParams({ search: value, page: paginationPage });
   };
 
-  const onLoadNextPage = () => {
-    paginationPage = paginationPage + 1;
-    setSearchParams({ search: searchText, page: paginationPage });
-  };
-
-  const onLoadPreviousPage = () => {
-    paginationPage = paginationPage - 1;
-    setSearchParams({ search: searchText, page: paginationPage });
-  };
-
-  const onToStartPage = () => {
-    paginationPage = 1;
-    setSearchParams({ search: searchText, page: 1 });
-  };
-
   if (movieList.length === 0) {
     title = 'No matches';
   } else {
@@ -87,9 +72,6 @@ const Movies = () => {
           movieList={movieList}
           paginationPage={paginationPage}
           totalPages={totalPages.current}
-          onLoadNextPage={onLoadNextPage}
-          onLoadPreviousPage={onLoadPreviousPage}
-          onToStartPage={onToStartPage}
         />
       )}
     </div>

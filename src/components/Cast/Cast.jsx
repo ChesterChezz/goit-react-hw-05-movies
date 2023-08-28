@@ -8,23 +8,22 @@ import defaultImg from '../../images/image.webp';
 const Cast = () => {
   const { movieId } = useParams();
   const [movieCast, setMovieCast] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const BASE_IMAGE_ENDPOINT = 'https://image.tmdb.org/t/p/w200/';
 
   useEffect(() => {
     setIsLoading(true);
-    getDataByAxios(`/movie/${movieId}/credits`, 0, '').then(resp => {
-      setIsLoading(false);
-      if (resp.status !== 200) {
-        throw new Error(resp.statusText);
-      } else {
-        setMovieCast(resp.data.cast);
+    getDataByAxios(`/movie/${movieId}/credits`, 0, '')
+      .then(resp => {
         setIsLoading(false);
-      }
-    });
+        if (resp.status !== 200) {
+          throw new Error(resp.statusText);
+        } else {
+          setMovieCast(resp.data.cast);
+        }
+      })
+      .finally(setIsLoading(false));
   }, [movieId]);
-
-   
 
   return (
     <div>
@@ -38,7 +37,7 @@ const Cast = () => {
         <ul className={css.castThumb}>
           {movieCast.map(({ character, id, name, profile_path }) => (
             <li key={id} className={css.castActorCard}>
-              {profile_path ? (
+              {
                 <img
                   src={
                     profile_path
@@ -49,15 +48,7 @@ const Cast = () => {
                   width="180"
                   height="270"
                 />
-              ) : (
-                <img
-                  className={css.castBlankImage}
-                  src={defaultImg}
-                  alt="Cast actor (no poster) "
-                  width="180"
-                  height="270"
-                />
-              )}
+              }
               {name}
               <p>Caracter: {character}</p>
             </li>

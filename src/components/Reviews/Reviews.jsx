@@ -7,18 +7,19 @@ import Loader from 'components/Loader/Loader';
 const Reviews = () => {
   const { movieId } = useParams();
   const [movieRevews, setMovieReviews] = useState([]);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
-    getDataByAxios(`/movie/${movieId}/reviews`, 0, '').then(resp => {
-      if (resp.status !== 200) {
-        throw new Error(resp.statusText);
-      } else {
-        setMovieReviews(resp.data.results);
-        setIsLoading(false);
-      }
-    });
+    getDataByAxios(`/movie/${movieId}/reviews`, 0, '')
+      .then(resp => {
+        if (resp.status !== 200) {
+          throw new Error(resp.statusText);
+        } else {
+          setMovieReviews(resp.data.results);
+        }
+      })
+      .finally(setIsLoading(false));
   }, [movieId]);
 
   return (
@@ -31,7 +32,7 @@ const Reviews = () => {
       ) : (
         <h4 className={css.reviewsTitle}>Reviews</h4>
       )}
-      {movieRevews.length && (
+      {movieRevews.length > 0 && (
         <ul className={css.list}>
           {movieRevews.map(({ id, author, content }) => (
             <li key={id}>

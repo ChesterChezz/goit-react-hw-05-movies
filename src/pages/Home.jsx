@@ -3,9 +3,9 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import { getDataByAxios } from 'sevices/library';
 import MovieList from 'components/MovieList/MovieList';
 import Loader from 'components/Loader/Loader';
+import MListButtons from 'components/MList Buttons/MListButtons';
 
 const Home = () => {
-  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [movieList, setMovieList] = useState([]);
   const totalPages = useRef(0);
@@ -20,12 +20,8 @@ const Home = () => {
     setIsLoading(true);
     getDataByAxios(`/trending/movie/week`, paginationPage)
       .then(resp => {
-        if (resp.status !== 200) {
-          throw new Error(resp.statusText);
-        } else {
-          totalPages.current = resp.data.total_pages;
-          setMovieList(resp.data.results);
-        }
+        totalPages.current = resp.data.total_pages;
+        setMovieList(resp.data.results);
       })
       .finally(setIsLoading(false));
   }, [paginationPage]);
@@ -36,14 +32,12 @@ const Home = () => {
     <div>
       {isLoading && <Loader />}
       <h3>{title}</h3>
-      {movieList.length !== 0 && (
-        <MovieList
-          location={location}
-          movieList={movieList}
-          paginationPage={paginationPage}
-          totalPages={totalPages.current}
-        />
-      )}
+      {movieList.length !== 0 && <MovieList movieList={movieList} />}
+      <MListButtons
+        paginationPage={paginationPage}
+        totalPages={totalPages.current}
+        movieList={movieList}
+      ></MListButtons>
     </div>
   );
 };

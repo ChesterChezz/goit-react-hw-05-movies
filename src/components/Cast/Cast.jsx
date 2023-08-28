@@ -15,7 +15,6 @@ const Cast = () => {
     setIsLoading(true);
     getDataByAxios(`/movie/${movieId}/credits`, 0, '')
       .then(resp => {
-        setIsLoading(false);
         if (resp.status !== 200) {
           throw new Error(resp.statusText);
         } else {
@@ -33,7 +32,7 @@ const Cast = () => {
       ) : (
         <h4 className={css.castTitle}>Cast</h4>
       )}
-      {movieCast.length && (
+      {movieCast.length > 0 && (
         <ul className={css.castThumb}>
           {movieCast.map(({ character, id, name, profile_path }) => (
             <li key={id} className={css.castActorCard}>

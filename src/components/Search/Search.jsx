@@ -10,7 +10,6 @@ const Search = ({ handleSubmit, handleSearchInputChange, searchText }) => {
           value={searchText}
           name="search"
           type="text"
-          onChange={handleSearchInputChange}
           autoComplete="off"
         />
       </label>

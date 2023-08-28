@@ -9,63 +9,54 @@ import Loader from 'components/Loader/Loader';
 const Movies = () => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  //console.log('searchParams :>> ', Object.fromEntries([...searchParams]));
   const [isLoading, setIsLoading] = useState(false);
   const [movieList, setMovieList] = useState([]);
-  const [searchText, setSearchText] = useState(
-    searchParams.get('search') ?? ''
-  );
   const totalPages = useRef(0);
-
-  let paginationPage = Number(searchParams.get('page')) ?? 0;
-  let title = '';
+  const paginationPage = Number(searchParams.get('page')) ?? 0;
+  const initialSearchText = searchParams.get('search') || '';
 
   useEffect(() => {
     setIsLoading(true);
-    getDataByAxios(`/search/movie`, paginationPage, searchText).then(resp => {
-      if (resp.status !== 200) {
-        throw new Error(resp.statusText);
-      } else {
-        totalPages.current = resp.data.total_pages;
-        setMovieList(resp.data.results);
-        setIsLoading(false);
+    getDataByAxios(`/search/movie`, paginationPage, initialSearchText).then(
+      resp => {
+        try {
+          if (resp.status !== 200) {
+            throw new Error(resp.statusText);
+          } else {
+            totalPages.current = resp.data.total_pages;
+            setMovieList(resp.data.results);
+          }
+        } catch (error) {
+          console.error(error);
+          Notiflix.Notify.failure('Failed to fetch movie data.');
+        } finally {
+          setIsLoading(false);
+        }
       }
-    });
-  }, [paginationPage, searchText]);
+    );
+  }, [paginationPage, initialSearchText]);
 
   const handleSubmit = evt => {
+    evt.preventDefault();
     const searchValue = evt.target[0].value.trim();
     if (!searchValue) {
       Notiflix.Notify.info(
         'The search bar cannot be empty. Please type any criteria in the search bar.'
       );
+    } else {
+      setSearchParams({ search: searchValue, page: 1 });
     }
-    evt.preventDefault();
-    paginationPage = 1;
-    let localValue = searchParams.get('search');
-    setSearchParams({ search: localValue.trim(), page: 1 });
-    setSearchText(localValue.trim());
   };
 
-  const handleSearchInputChange = ({ target: { value } }) => {
-    setSearchParams({ search: value, page: paginationPage });
-  };
-
-  if (movieList.length === 0) {
-    title = 'No matches';
-  } else {
-    title = `Search "${searchText}" (Page ${paginationPage} of ${totalPages.current})`;
-  }
+  const title = movieList.length
+    ? `Search "${initialSearchText}" (Page ${paginationPage} of ${totalPages.current})`
+    : 'No matches';
 
   return (
     <div>
       {isLoading && <Loader />}
-      <Search
-        handleSubmit={handleSubmit}
-        handleSearchInputChange={handleSearchInputChange}
-        searchText={searchParams.get('search') ?? ''}
-      />
-      {searchText && <h3>{title}</h3>}
+      <Search handleSubmit={handleSubmit} searchText={initialSearchText} />
+      {initialSearchText && <h3>{title}</h3>}
       {movieList.length !== 0 && (
         <MovieList
           location={location}

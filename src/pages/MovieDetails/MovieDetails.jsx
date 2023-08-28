@@ -17,12 +17,7 @@ const MovieDetails = () => {
     setIsLoading(true);
     getDataByAxios(`/movie/${movieId}`, 0, '')
       .then(resp => {
-        setIsLoading(false);
-        if (resp.status !== 200) {
-          throw new Error(resp.statusText);
-        } else {
-          setMovieData(resp.data);
-        }
+        setMovieData(resp.data);
       })
       .finally(setIsLoading(false));
   }, [movieId]);

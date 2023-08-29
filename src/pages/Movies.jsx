@@ -13,52 +13,62 @@ const Movies = () => {
   const [movieList, setMovieList] = useState([]);
   const totalPages = useRef(0);
   const paginationPage = Number(searchParams.get('page')) ?? 0;
-  const initialSearchText = searchParams.get('search') || '';
+  const [searchText, setSearchText] = useState(
+    searchParams.get('search') ?? ''
+  );
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
-    getDataByAxios(`/search/movie`, paginationPage, initialSearchText).then(
-      resp => {
-        try {
-          totalPages.current = resp.data.total_pages;
-          setMovieList(resp.data.results);
-        } catch (error) {
-          console.error(error);
-          Notiflix.Notify.failure('Failed to fetch movie data.');
-        } finally {
-          setIsLoading(false);
-        }
+    getDataByAxios(`/search/movie`, paginationPage, searchText).then(resp => {
+      try {
+        totalPages.current = resp.data.total_pages;
+        setMovieList(resp.data.results);
+      } catch (error) {
+        console.error(error);
+        Notiflix.Notify.failure('Failed to fetch movie data.');
+      } finally {
+        setIsLoading(false);
       }
-    );
-  }, [paginationPage, initialSearchText]);
+    });
+  }, [paginationPage, searchText]);
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    const searchValue = evt.target[0].value.trim();
+    const searchValue = inputValue.trim();
     if (!searchValue) {
       Notiflix.Notify.info(
         'The search bar cannot be empty. Please type any criteria in the search bar.'
       );
     } else {
       setSearchParams({ search: searchValue, page: 1 });
+      setSearchText(searchValue.trim());
     }
   };
 
+  const handleSearchInputChange = ({ target: { value } }) => {
+    setInputValue(value);
+  };
+
   const title = movieList.length
-    ? `Search "${initialSearchText}" (Page ${paginationPage} of ${totalPages.current})`
+    ? `Search "${searchText}" (Page ${paginationPage} of ${totalPages.current})`
     : 'No matches';
 
   return (
     <div>
       {isLoading && <Loader />}
-      <Search handleSubmit={handleSubmit} searchText={initialSearchText} />
-      {initialSearchText && <h3>{title}</h3>}
+      <Search
+        handleSubmit={handleSubmit}
+        searchText={searchParams.get('search') ?? ''}
+        handleSearchInputChange={handleSearchInputChange}
+      />
+      {searchText && <h3>{title}</h3>}
       {movieList.length !== 0 && <MovieList movieList={movieList} />}
       <Pagination
         paginationPage={paginationPage}
         totalPages={totalPages.current}
         movieList={movieList}
-      ></Pagination>
+      />
     </div>
   );
 };

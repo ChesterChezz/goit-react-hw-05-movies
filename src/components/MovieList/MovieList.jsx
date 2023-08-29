@@ -25,18 +25,12 @@ const MovieList = ({ movieList }) => {
 };
 
 MovieList.propTypes = {
-  location: PropTypes.object.isRequired,
   movieList: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
     })
   ),
-  paginationPage: PropTypes.number.isRequired,
-  totalPages: PropTypes.number.isRequired,
-  onLoadNextPage: PropTypes.func.isRequired,
-  onLoadPreviousPage: PropTypes.func.isRequired,
-  onToStartPage: PropTypes.func.isRequired,
 };
 
 export default MovieList;

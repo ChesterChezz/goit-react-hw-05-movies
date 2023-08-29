@@ -15,11 +15,7 @@ const Cast = () => {
     setIsLoading(true);
     getDataByAxios(`/movie/${movieId}/credits`, 0, '')
       .then(resp => {
-        if (resp.status !== 200) {
-          throw new Error(resp.statusText);
-        } else {
-          setMovieCast(resp.data.cast);
-        }
+        setMovieCast(resp.data.cast);
       })
       .finally(setIsLoading(false));
   }, [movieId]);

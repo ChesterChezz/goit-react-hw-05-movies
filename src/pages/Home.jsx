@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getDataByAxios } from 'sevices/library';
 import MovieList from 'components/MovieList/MovieList';
 import Loader from 'components/Loader/Loader';
-import MListButtons from 'components/MList Buttons/MListButtons';
+import Pagination from 'components/MList Buttons/Pagination';
 
 const Home = () => {
   const [searchParams] = useSearchParams();
@@ -33,11 +33,11 @@ const Home = () => {
       {isLoading && <Loader />}
       <h3>{title}</h3>
       {movieList.length !== 0 && <MovieList movieList={movieList} />}
-      <MListButtons
+      <Pagination
         paginationPage={paginationPage}
         totalPages={totalPages.current}
         movieList={movieList}
-      ></MListButtons>
+      ></Pagination>
     </div>
   );
 };

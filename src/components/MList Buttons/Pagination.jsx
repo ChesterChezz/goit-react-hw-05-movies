@@ -1,8 +1,8 @@
 import Button from '../Button/Button';
 import css from '../MovieList/MovieList.module.css';
 import { useSearchParams } from 'react-router-dom';
-
-const MListButtons = ({ paginationPage, totalPages, movieList }) => {
+import PropTypes from 'prop-types';
+const Pagination = ({ paginationPage, totalPages, movieList }) => {
   const [, setSearchParams] = useSearchParams();
   return (
     <>
@@ -38,4 +38,14 @@ const MListButtons = ({ paginationPage, totalPages, movieList }) => {
     </>
   );
 };
-export default MListButtons;
+Pagination.propTypes = {
+  movieList: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+    })
+  ),
+  paginationPage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+};
+export default Pagination;

@@ -13,11 +13,7 @@ const Reviews = () => {
     setIsLoading(true);
     getDataByAxios(`/movie/${movieId}/reviews`, 0, '')
       .then(resp => {
-        if (resp.status !== 200) {
-          throw new Error(resp.statusText);
-        } else {
-          setMovieReviews(resp.data.results);
-        }
+        setMovieReviews(resp.data.results);
       })
       .finally(setIsLoading(false));
   }, [movieId]);

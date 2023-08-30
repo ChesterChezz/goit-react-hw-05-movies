@@ -13,10 +13,7 @@ const Movies = () => {
   const [movieList, setMovieList] = useState([]);
   const totalPages = useRef(0);
   const paginationPage = Number(searchParams.get('page')) ?? 0;
-  const [searchText, setSearchText] = useState(
-    searchParams.get('search') ?? ''
-  );
-  const [inputValue, setInputValue] = useState('');
+  const [searchText] = useState(searchParams.get('search') ?? '');
 
   useEffect(() => {
     setIsLoading(true);
@@ -33,21 +30,8 @@ const Movies = () => {
     });
   }, [paginationPage, searchText]);
 
-  const handleSubmit = evt => {
-    evt.preventDefault();
-    const searchValue = inputValue.trim();
-    if (!searchValue) {
-      Notiflix.Notify.info(
-        'The search bar cannot be empty. Please type any criteria in the search bar.'
-      );
-    } else {
-      setSearchParams({ search: searchValue, page: 1 });
-      setSearchText(searchValue.trim());
-    }
-  };
-
-  const handleSearchInputChange = ({ target: { value } }) => {
-    setInputValue(value);
+  const handleSubmit = searchValue => {
+    setSearchParams({ search: searchValue, page: 1 });
   };
 
   const title = movieList.length
@@ -57,11 +41,7 @@ const Movies = () => {
   return (
     <div>
       {isLoading && <Loader />}
-      <Search
-        handleSubmit={handleSubmit}
-        searchText={searchParams.get('search') ?? ''}
-        handleSearchInputChange={handleSearchInputChange}
-      />
+      <Search handleSubmit={handleSubmit} />
       {searchText && <h3>{title}</h3>}
       {movieList.length !== 0 && <MovieList movieList={movieList} />}
       <Pagination

@@ -31,7 +31,7 @@ const Movies = () => {
         setIsLoading(false);
       }
     });
-  }, [searchParams]);
+  }, [paginationPage, searchText]);
 
   const handleSubmit = searchValue => {
     setSearchParams({ search: searchValue, page: 1 });

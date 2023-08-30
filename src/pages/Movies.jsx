@@ -12,10 +12,13 @@ const Movies = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [movieList, setMovieList] = useState([]);
   const totalPages = useRef(0);
-  const paginationPage = Number(searchParams.get('page')) ?? 0;
-  const [searchText] = useState(searchParams.get('search') ?? '');
+
+  const paginationPage = searchParams.get('page') ?? 1;
+  const searchText = searchParams.get('search');
 
   useEffect(() => {
+    if (!searchText) return;
+
     setIsLoading(true);
     getDataByAxios(`/search/movie`, paginationPage, searchText).then(resp => {
       try {
@@ -28,7 +31,7 @@ const Movies = () => {
         setIsLoading(false);
       }
     });
-  }, [paginationPage, searchText]);
+  }, [searchParams]);
 
   const handleSubmit = searchValue => {
     setSearchParams({ search: searchValue, page: 1 });
